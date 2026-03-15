@@ -36,7 +36,7 @@ pipeline {
             steps {
                 sh 'echo "Building Docker container"'
                 // Use double quotes "" so Groovy can read the ${BUILD_NUMBER} variable
-                sh "sudo docker run -d --name container_${BUILD_NUMBER} -p 2500:2500 mynewimage:v${BUILD_NUMBER}"
+                sh "sudo docker run -d --name container_${BUILD_NUMBER} -p 9090:80 mynewimage:v${BUILD_NUMBER}"
                 sh "sudo docker ps -a | grep mynewimage"
             }
         }
