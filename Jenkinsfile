@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'Build' 
+        label 'jenkins-child' 
     }
     stages {
         stage ("Installing Git and Docker") {
