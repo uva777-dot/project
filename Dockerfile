@@ -10,6 +10,6 @@ COPY server.js /project
 
 COPY index.html /project/public/
 
-EXPOSE 3000
+EXPOSE 2500
 
 CMD ["node","server.js"]
