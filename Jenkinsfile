@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'Build' #Server where the pipeline will execute
+        label 'Build' 
     }
     stages {
         stage ("Installing Git and Docker") {
