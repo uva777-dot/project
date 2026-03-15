@@ -31,7 +31,7 @@ pipeline {
         stage("Build Container") {
             steps {
                 sh 'echo "Building Docker container"'
-                sh "echo $BUILD_NUMBER" #BUILD_NUMBER is a predefined variable which holds the value of build number
+                sh "echo $BUILD_NUMBER" 
                 sh 'sudo docker run -d --name container_$BUILD_NUMBER -p 30$BUILD_NUMBER:3000 mynewimage:v$BUILD_NUMBER' #Here, 1st port is instance port and 2nd port is container port
                 sh 'sudo docker ps -a | grep $BUILD_NUMBER'
             }
