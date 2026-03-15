@@ -5,19 +5,22 @@ pipeline {
     stages {
         stage ("Installing Git and Docker") {
             steps {
+                // Ensure Docker and Git are present
                 sh "sudo yum install docker git -y"
-                sh "sudo service docker start"
-                sh "sudo service docker status"
+                sh "sudo systemctl start docker"
             }
         }
-        stage("Pull,Build,Verify image") {
+        stage("Checkout and Build") {
             steps {
-                sh 'echo "Pulling Docker File from Github"'
-                sh 'sudo git init'
-                sh 'sudo git clone https://github.com/soumyabiswas37/jenkins_project2.git'
-                sh 'echo "Bilding Docker image and check the status"'
-                sh 'sudo docker build -t mynewimage:v$BUILD_NUMBER .'
-                sh 'sudo docker images | grep "mynewimage"'
+                // Jenkins handles the git clone automatically if you configured the job 
+                // but if you want to do it manually, we need to go INTO the folder:
+                sh 'echo "Building Docker image..." '
+                
+                /* Note: Jenkins usually clones your repo into the workspace automatically.
+                   If you manual clone, you must 'cd' into the directory to find the Dockerfile.
+                */
+                sh "sudo docker build -t mynewimage:v${BUILD_NUMBER} ."
+                sh "sudo docker images | grep mynewimage"
             }
         }
         
@@ -28,12 +31,13 @@ pipeline {
                 }
             }
         }
+
         stage("Build Container") {
             steps {
                 sh 'echo "Building Docker container"'
-                sh "echo $BUILD_NUMBER" 
-                sh 'sudo docker run -d --name container_$BUILD_NUMBER -p 30$BUILD_NUMBER:3000 mynewimage:v$BUILD_NUMBER'
-                sh 'sudo docker ps -a | grep $BUILD_NUMBER'
+                // Use double quotes "" so Groovy can read the ${BUILD_NUMBER} variable
+                sh "sudo docker run -d --name container_${BUILD_NUMBER} -p 3000:3000 mynewimage:v${BUILD_NUMBER}"
+                sh "sudo docker ps -a | grep mynewimage"
             }
         }
         
@@ -41,6 +45,6 @@ pipeline {
             steps {
                 cleanWs()
             }
-      }
+        }
     }
 }
